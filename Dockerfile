@@ -15,16 +15,16 @@ RUN apt-get update && apt-get install -y \
     gcc \
     postgresql-client \
     wget \
-    tar \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Install TexasSolver
-RUN wget https://github.com/bupticybee/TexasSolver/releases/latest/download/TexasSolver-linux.tar.gz && \
-    tar -xzf TexasSolver-linux.tar.gz && \
-    rm TexasSolver-linux.tar.gz && \
-    mv TexasSolver/TexasSolverCli /usr/local/bin/TexasSolverCli && \
+RUN wget https://github.com/bupticybee/TexasSolver/releases/download/v0.2.0/TexasSolver-v0.2.0-Linux.zip && \
+    unzip TexasSolver-v0.2.0-Linux.zip && \
+    rm TexasSolver-v0.2.0-Linux.zip && \
+    mv TexasSolver-v0.2.0-Linux/TexasSolverCli /usr/local/bin/TexasSolverCli && \
     chmod +x /usr/local/bin/TexasSolverCli && \
-    rm -rf TexasSolver
+    rm -rf TexasSolver-v0.2.0-Linux
 
 # Copy requirements first for better caching
 COPY backend/requirements.txt .
