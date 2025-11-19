@@ -14,7 +14,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN apt-get update && apt-get install -y \
     gcc \
     postgresql-client \
+    wget \
+    tar \
     && rm -rf /var/lib/apt/lists/*
+
+# Install TexasSolver
+RUN wget https://github.com/bupticybee/TexasSolver/releases/latest/download/TexasSolver-linux.tar.gz && \
+    tar -xzf TexasSolver-linux.tar.gz && \
+    rm TexasSolver-linux.tar.gz && \
+    mv TexasSolver/TexasSolverCli /usr/local/bin/TexasSolverCli && \
+    chmod +x /usr/local/bin/TexasSolverCli && \
+    rm -rf TexasSolver
 
 # Copy requirements first for better caching
 COPY backend/requirements.txt .
@@ -38,4 +48,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8000/api/health')"
 
 # Run the application
-CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}
